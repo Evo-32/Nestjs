@@ -1,48 +1,44 @@
 import { Controller, Get, Post, Put, Delete, Param, Query, Body } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { OneService } from './one.service';
 
 @Controller('one')
 export class OneController {
+    constructor(private readonly oneService: OneService){
+
+    }
+
   // GET names
   @Get()
-  getStudent(@Query('major') major: string){
-    return [
-        {major}
-    ]
+  getStudent(@Query('major') major: 'engineer' | 'med'){
+    return this.oneService.getStudent(major)
   }
 
   //GET by id
   @Get(':id')
   getOneStudent(@Param('id') id: string){
-    return {
-        id
-    }
+    return this.oneService.getOneStudent(+id)
   }
 
 
   //POST names
   @Post()
-  createStudent(@Body() createStudentDto:CreateStudentDto){
-    return {
-        name: createStudentDto.name
-    }
+  createStudent(@Body() createStudentDto: CreateStudentDto){
+    return this.oneService.createStudent(createStudentDto)
   }
 
 
   //PUT by id
   @Put(':id')
-  createOneStudent(@Param('id') id: string, @Body() UpdateStudentDto:UpdateStudentDto){
-    return {
-        id,
-        name: UpdateStudentDto
-    }
+  updateStudent(@Param('id') id: string, @Body() updateStudentDto:UpdateStudentDto){
+    return this.oneService.updateStudent(+id, updateStudentDto)
   }
 
 
   //DELETE by id
   @Delete(':id')
   removeStudent(@Param('id') id: string){
-    return {}
+    return this.oneService.removeStudent(+id)
   }
 }
